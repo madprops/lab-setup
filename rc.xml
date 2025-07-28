@@ -439,15 +439,6 @@
         <action name="Raise" />
       </mousebind>
 
-      <mousebind direction="Up" action="Scroll" wcustom="true">
-        <action name="Execute" />
-        <action command="~/.config/labwc/scripts/volup.sh" />
-      </mousebind>
-      <mousebind direction="Down" action="Scroll" wcustom="true">
-        <action name="Execute" />
-        <action command="~/.config/labwc/scripts/voldown.sh" />
-      </mousebind>
-
       <mousebind direction="Up" action="Scroll" button="S-" wcustom="true">
         <action name="GoToDesktop" to="left" wrap="no" />
       </mousebind>
@@ -469,6 +460,15 @@
       </mousebind>
       <mousebind button="Middle" action="Click" wcustom="true">
         <action name="ToggleShade" />
+      </mousebind>
+
+      <mousebind direction="Up" action="Scroll" wcustom="true">
+        <action name="Execute" />
+        <action command="~/.config/labwc/scripts/volup.sh" />
+      </mousebind>
+      <mousebind direction="Down" action="Scroll" wcustom="true">
+        <action name="Execute" />
+        <action command="~/.config/labwc/scripts/voldown.sh" />
       </mousebind>
     </context>
 
@@ -505,6 +505,12 @@
       </mousebind>
       <mousebind button="Middle" action="Click" wcustom="true">
         <action name="Execute" command="~/.config/labwc/scripts/lock.sh" />
+      </mousebind>
+      <mousebind direction="up" action="Scroll" wcustom="true">
+        <action name="GoToDesktop" to="left" wrap="no" />
+      </mousebind>
+      <mousebind direction="down" action="Scroll" wcustom="true">
+        <action name="GoToDesktop" to="right" wrap="no" />
       </mousebind>
     </context>
 
