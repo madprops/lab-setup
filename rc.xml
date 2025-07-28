@@ -447,6 +447,14 @@
         <action name="Execute" />
         <action command="~/.config/labwc/scripts/voldown.sh" />
       </mousebind>
+
+      <mousebind direction="Up" action="Scroll" button="S-" wcustom="true">
+        <action name="GoToDesktop" to="left" wrap="no" />
+      </mousebind>
+      <mousebind direction="Down" action="Scroll" button="S-" wcustom="true">
+        <action name="GoToDesktop" to="right" wrap="no" />
+      </mousebind>
+
     </context>
 
     <context name="Title">
@@ -460,7 +468,7 @@
         <action name="ShowMenu" menu="client-menu" />
       </mousebind>
       <mousebind button="Middle" action="Click" wcustom="true">
-        <action name="Execute" command="~/.config/labwc/scripts/lock.sh" />
+        <action name="ToggleShade" />
       </mousebind>
     </context>
 
@@ -556,6 +564,13 @@
       </mousebind>
       <mousebind direction="Down" action="Scroll">
         <action name="GoToDesktop" to="right" wrap="yes" />
+      </mousebind>
+
+      <mousebind direction="Up" action="Scroll" button="S-" wcustom="true">
+        <action name="GoToDesktop" to="left" wrap="no" />
+      </mousebind>
+      <mousebind direction="Down" action="Scroll" button="S-" wcustom="true">
+        <action name="GoToDesktop" to="right" wrap="no" />
       </mousebind>
     </context>
 
