@@ -251,7 +251,7 @@
     -->
     <layoutScope>global</layoutScope>
     <repeatRate>25</repeatRate>
-    <repeatDelay>180</repeatDelay>
+    <repeatDelay wcustom="true">180</repeatDelay>
     <keybind key="A-Tab">
       <action name="NextWindow" />
     </keybind>
