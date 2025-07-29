@@ -197,10 +197,18 @@
     See man labwc-actions for further information.
   -->
   <desktops>
-    <number>10</number>
+    <number>9</number>
     <popupTime>1000</popupTime>
     <names>
-      <name>Default</name>
+      <name>1</name>
+      <name>2</name>
+      <name>3</name>
+      <name>4</name>
+      <name>5</name>
+      <name>6</name>
+      <name>7</name>
+      <name>8</name>
+      <name>9</name>
     </names>
   </desktops>
 
