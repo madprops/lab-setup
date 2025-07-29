@@ -1,4 +1,32 @@
 #!/usr/bin/env ruby
+
+# PID file logic to stop existing timer.rb process
+pidfile = "/tmp/timer.rb.pid"
+
+if File.exist?(pidfile)
+  old_pid = File.read(pidfile).strip.to_i
+  alive = false
+  if old_pid > 0
+    begin
+      Process.kill(0, old_pid)
+      alive = true
+    rescue Errno::ESRCH
+      alive = false
+    rescue => e
+      warn "[timer.rb] Error checking old process: #{e}"
+    end
+    if alive
+      begin
+        Process.kill('TERM', old_pid)
+        sleep 0.5
+      rescue => e
+        warn "[timer.rb] Could not kill old process: #{e}"
+      end
+    end
+  end
+end
+
+File.write(pidfile, Process.pid)
 require "socket"
 require "open3"
 
@@ -8,9 +36,9 @@ end
 
 def format_time(remaining)
   if remaining < 60
-    "#{remaining.round} seconds"
+    "#{remaining.to_i} seconds"
   elsif remaining < 3600
-    "#{(remaining/60.0).round(1)} minutes"
+    "#{(remaining/60).to_i} minutes"
   elsif remaining < 86400
     "#{(remaining/3600.0).round(2)} hours"
   else
@@ -72,9 +100,7 @@ def get_data()
   return title, t
 end
 
-
-# Listen for 'reset_timer' or 'quit' on a dedicated control socket and set reset_flag if received
-def listen_for_reset(reset_flag)
+def listen_for_flags(flags)
   Thread.new do
     socket_path = "/tmp/timer_control.sock"
     File.unlink(socket_path) if File.exist?(socket_path)
@@ -86,10 +112,17 @@ def listen_for_reset(reset_flag)
         msg = client.gets
         client.close
 
-        if msg && msg.strip == "reset_timer"
-          reset_flag[:reset] = true
-        elsif msg && msg.strip == "quit"
-          reset_flag[:reset] = true
+        if msg
+          cmsg = msg.strip
+
+          case cmsg
+          when "reset_timer", "quit"
+            flags[:reset] = true
+          when "inc_timer"
+            flags[:inc] = true
+          when "dec_timer"
+            flags[:dec] = true
+          end
         end
       rescue => e
         warn "[timer.rb] Control socket error: #{e}"
@@ -99,24 +132,32 @@ def listen_for_reset(reset_flag)
 end
 
 def start_timer(title, t)
-  total_seconds = (t * 60).to_i
-  reset_flag = { reset: false }
-  listen_for_reset(reset_flag)
-  start_time = Time.now
+  remaining = (t * 60).to_i
+  flags = { reset: false, inc: false, dec: false }
+  listen_for_flags(flags)
 
   while true
-    if reset_flag[:reset]
+    if flags[:reset]
       exit
     end
 
-    elapsed = Time.now - start_time
-    remaining = total_seconds - elapsed
+    # Handle inc/dec flags
+    if flags[:inc]
+      remaining += 5 * 60
+      flags[:inc] = false
+    elsif flags[:dec]
+      remaining -= 5 * 60
+      remaining = 5 if remaining < 5
+      flags[:dec] = false
+    end
+
     break if remaining <= 0
 
     rem = format_time(remaining)
-    msg = "#{title} #{rem}"
+    msg = "#{title}  🚂  #{rem}"
     send_msg(msg)
     sleep 1
+    remaining -= 1
   end
 
   msg = "#{title} Done"
@@ -126,3 +167,8 @@ end
 title, t = get_data()
 exit if title.empty? || t.nil?
 start_timer(title, t)
+
+# Cleanup PID file on exit
+at_exit do
+  File.delete(pidfile) if File.exist?(pidfile)
+end
