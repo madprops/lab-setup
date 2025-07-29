@@ -556,9 +556,9 @@
     </context>
 
     <context name="Root">
-      <mousebind button="Left" action="Press">
+      <!-- <mousebind button="Left" action="Press">
         <action name="ShowMenu" menu="root-menu" />
-      </mousebind>
+      </mousebind> -->
       <mousebind button="Right" action="Press">
         <action name="ShowMenu" menu="root-menu" />
       </mousebind>
