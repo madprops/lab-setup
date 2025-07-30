@@ -34,15 +34,27 @@ def send_msg(msg)
   system("echo '#{msg}' | socat - UNIX-CONNECT:/tmp/sockpupper.sock")
 end
 
+def smart_label(n, singular, plural)
+  (n == 1) || (n == 1.0) ? singular : plural
+end
+
 def format_time(remaining)
   if remaining < 60
-    "#{remaining.to_i} seconds"
+    n = remaining.to_i
+    label = smart_label(n, "second", "seconds")
+    "#{n} #{label}"
   elsif remaining < 3600
-    "#{(remaining/60).to_i} minutes"
+    n = (remaining/60).to_i
+    label = smart_label(n, "minute", "minutes")
+    "#{n} #{label}"
   elsif remaining < 86400
-    "#{(remaining/3600.0).round(2)} hours"
+    n = (remaining/3600.0).round(2)
+    label = smart_label(n, "hour", "hours")
+    "#{n} #{label}"
   else
-    "#{(remaining/86400.0).round(2)} days"
+    n = (remaining/86400.0).round(2)
+    label = smart_label(n, "day", "days")
+    "#{n} #{label}"
   end
 end
 
@@ -83,11 +95,11 @@ def get_data()
   n = time.gsub(/[^0-9]/, "").strip.to_i
   u = time.gsub(/[0-9]/, "").strip
 
-  if u == "m" or u.include?("min")
+  if (u == "m") or u.include?("min")
     t = n
-  elsif u == "s" or u.include?("sec")
+  elsif (u == "s") or u.include?("sec")
     t = n / 60.0
-  elsif u == "h" or u.include?("hour")
+  elsif (u == "h") or u.include?("hour")
     t = n * 60.0
   else
     t = n
