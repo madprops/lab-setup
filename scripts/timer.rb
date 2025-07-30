@@ -6,6 +6,7 @@ pidfile = "/tmp/timer.rb.pid"
 if File.exist?(pidfile)
   old_pid = File.read(pidfile).strip.to_i
   alive = false
+
   if old_pid > 0
     begin
       Process.kill(0, old_pid)
@@ -15,6 +16,7 @@ if File.exist?(pidfile)
     rescue => e
       warn "[timer.rb] Error checking old process: #{e}"
     end
+
     if alive
       begin
         Process.kill('TERM', old_pid)
@@ -118,6 +120,7 @@ def listen_for_flags(flags)
     File.unlink(socket_path) if File.exist?(socket_path)
     server = UNIXServer.new(socket_path)
     File.chmod(0o666, socket_path)
+
     loop do
       begin
         client = server.accept
