@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-# Simple Unix socket server for sfwbar custom widget
 import os
 import socket
 import threading
+import subprocess
 import sys
 
 
@@ -57,6 +57,7 @@ def socket_server():
         conn, _ = server.accept()
         threading.Thread(target=handle_client, args=(conn,), daemon=True).start()
 
+
 def stdin_listener(conn):
     with conns_lock:
         persistent_conns.append(conn)
@@ -72,10 +73,17 @@ def stdin_listener(conn):
 
 
 if __name__ == "__main__":
+    # Launch reset.rb at the start (background)
+    try:
+        reset_proc = subprocess.Popen(["ruby", "reset.rb"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("Launched reset.rb in background")
+    except Exception as e:
+        print(f"Failed to launch reset.rb: {e}")
+
     # Start the server and accept one connection for stdin_listener (assumed to be the bar)
     server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 
-    # Remove old socket if exists (extra safety)
+    # Remove old socket if exists (e`xtra safety)
     if os.path.exists(SOCKET_PATH):
         os.unlink(SOCKET_PATH)
 
@@ -83,6 +91,13 @@ if __name__ == "__main__":
     os.chmod(SOCKET_PATH, 0o777)
     server.listen(5)
     print(f"Socket server started at {SOCKET_PATH}")
+
+    # Launch sfwbar after the socket server is ready (background)
+    try:
+        sfwbar_proc = subprocess.Popen(["sfwbar"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("Launched sfwbar in background")
+    except Exception as e:
+        print(f"Failed to launch sfwbar: {e}")
 
     # Accept a connection for stdin_listener (the bar's persistent connection)
     conn, _ = server.accept()
