@@ -358,11 +358,11 @@
     </keybind>
 
     <keybind key="Print" wcustom="true">
-      <action name="Execute" command="~/.config/labwc/scripts/print.sh 1" />
+      <action name="Execute" command="~/.config/labwc/scripts/print.sh 2" />
     </keybind>
 
     <keybind key="S-Print" wcustom="true">
-      <action name="Execute" command="~/.config/labwc/scripts/print.sh 2" />
+      <action name="Execute" command="~/.config/labwc/scripts/print.sh 1" />
     </keybind>
   </keyboard>
 
