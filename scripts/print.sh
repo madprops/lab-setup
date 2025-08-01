@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-gwenview $(/home/yo/path/jabo "$1")
+echo "$1"
+gwenview $(/home/yo/path/jabo --monitor "$1" --path /home/yo/pics/pics1 --name shawt)
