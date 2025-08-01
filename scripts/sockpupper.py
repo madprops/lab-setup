@@ -94,7 +94,9 @@ if __name__ == "__main__":
 
     # Launch sfwbar after the socket server is ready (background)
     try:
-        sfwbar_proc = subprocess.Popen(["sfwbar"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        with open("sfw_error.log", "a") as error_log:
+            sfwbar_proc = subprocess.Popen(["sfwbar"], stdout=subprocess.DEVNULL, stderr=error_log)
+
         print("Launched sfwbar in background")
     except Exception as e:
         print(f"Failed to launch sfwbar: {e}")
