@@ -508,7 +508,7 @@
 
     <context name="Icon">
       <mousebind button="Left" action="Click">
-        <action name="ShowMenu" menu="client-menu" atCursor="no" />
+        <action name="Execute" command="diaysi 2" />
       </mousebind>
       <mousebind button="Right" action="Click">
         <action name="ShowMenu" menu="client-menu" atCursor="no" />
